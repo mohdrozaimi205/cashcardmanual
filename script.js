@@ -6,12 +6,11 @@ const fmtRM = (n) => (isFinite(n) ? n.toFixed(2) : "—");
 function compute(amount, subsidyPrice, currentPrice) {
   const amt = Number(amount), sub = Number(subsidyPrice), cur = Number(currentPrice);
   if (!(isFinite(amt) && isFinite(sub) && isFinite(cur)) || sub <= 0 || cur <= 0 || amt <= 0) {
-    return { litersExact: NaN, edc: NaN, diffLiters: NaN };
+    return { litersExact: NaN, edc: NaN };
   }
   const litersExact = amt / sub;
   const edc = Math.round(litersExact * cur * 100) / 100;
-  const diffLiters = 0; // tiada liter bulat, jadi beza = 0
-  return { litersExact, edc, diffLiters };
+  return { litersExact, edc };
 }
 
 // Update card calculation
@@ -22,15 +21,13 @@ function updateCard(prefix) {
 
   const outExact = document.getElementById(prefix + "LitersExact");
   const outEDC = document.getElementById(prefix + "EDC");
-  const outDiff = document.getElementById(prefix + "Diff");
 
-  const { litersExact, edc, diffLiters } = compute(
+  const { litersExact, edc } = compute(
     amountEl.value, subsidyEl.value, currentEl.value
   );
 
   outExact.textContent = fmt2(litersExact);
   outEDC.textContent = fmtRM(edc);
-  outDiff.textContent = isFinite(diffLiters) ? diffLiters.toFixed(2) + " L" : "—";
 }
 
 // Reset hanya kosongkan Jumlah pelanggan
