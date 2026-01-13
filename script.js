@@ -3,17 +3,15 @@ const fmt2 = (n) => (isFinite(n) ? n.toFixed(2) : "—");
 const fmtRM = (n) => (isFinite(n) ? n.toFixed(2) : "—");
 
 // Core calculation
-function compute(amount, subsidyPrice, currentPrice, literRoundPlaces = 2) {
+function compute(amount, subsidyPrice, currentPrice) {
   const amt = Number(amount), sub = Number(subsidyPrice), cur = Number(currentPrice);
-  const places = Math.max(0, Math.min(6, Number(literRoundPlaces) || 2));
-  if (!(isFinite(amt) && isFinite(sub) && isFinite(cur)) || sub <= 0 || cur <= 0 || amt < 0) {
-    return { litersExact: NaN, litersRounded: NaN, edc: NaN, diffLiters: NaN };
+  if (!(isFinite(amt) && isFinite(sub) && isFinite(cur)) || sub <= 0 || cur <= 0 || amt <= 0) {
+    return { litersExact: NaN, edc: NaN, diffLiters: NaN };
   }
   const litersExact = amt / sub;
-  const litersRounded = Number(litersExact.toFixed(places));
   const edc = Math.round(litersExact * cur * 100) / 100;
-  const diffLiters = litersRounded - litersExact;
-  return { litersExact, litersRounded, edc, diffLiters };
+  const diffLiters = 0; // tiada liter bulat, jadi beza = 0
+  return { litersExact, edc, diffLiters };
 }
 
 // Update card calculation
@@ -21,28 +19,23 @@ function updateCard(prefix) {
   const amountEl = document.getElementById(prefix + "Amount");
   const subsidyEl = document.getElementById(prefix + "Subsidy");
   const currentEl = document.getElementById(prefix + "Current");
-  const roundEl = document.getElementById(prefix + "LiterRound");
 
   const outExact = document.getElementById(prefix + "LitersExact");
-  const outRounded = document.getElementById(prefix + "LitersRounded");
   const outEDC = document.getElementById(prefix + "EDC");
   const outDiff = document.getElementById(prefix + "Diff");
 
-  const { litersExact, litersRounded, edc, diffLiters } = compute(
-    amountEl.value, subsidyEl.value, currentEl.value, roundEl.value
+  const { litersExact, edc, diffLiters } = compute(
+    amountEl.value, subsidyEl.value, currentEl.value
   );
 
   outExact.textContent = fmt2(litersExact);
-  outRounded.textContent = fmt2(litersRounded);
   outEDC.textContent = fmtRM(edc);
-  outDiff.textContent = isFinite(diffLiters)
-    ? (diffLiters >= 0 ? "+" : "") + diffLiters.toFixed(6) + " L"
-    : "—";
+  outDiff.textContent = isFinite(diffLiters) ? diffLiters.toFixed(2) + " L" : "—";
 }
 
-// Reset hanya Jumlah pelanggan
+// Reset hanya kosongkan Jumlah pelanggan
 function resetCard(prefix) {
-  document.getElementById(prefix + "Amount").value = 100;
+  document.getElementById(prefix + "Amount").value = "";
   updateCard(prefix);
 }
 
@@ -76,7 +69,12 @@ async function updateFuelPrices() {
   }
 }
 
+// Bind input events supaya auto-kira bila isi
+["diesel", "petrol"].forEach(prefix => {
+  ["Amount","Subsidy","Current"].forEach(field => {
+    document.getElementById(prefix + field).addEventListener("input", () => updateCard(prefix));
+  });
+});
+
 // Initial
-updateCard("diesel");
-updateCard("petrol");
 updateFuelPrices();
