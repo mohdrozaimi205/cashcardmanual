@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CASH CARD Fuel Calculator — Abang Mie</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22c55e;   /* green */
+      --accent2: #60a5fa;  /* blue */
+      --danger: #ef4444;   /* red */
+      --brand: #f59e0b;    /* amber */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 600px at 10% 10%, #0b1220 0%, var(--bg) 60%);
+      color: var(--text);
+    }
+
+    header {
+      padding: 24px 20px;
+      border-bottom: 1px solid #1f2937;
+      background: linear-gradient(180deg, rgba(245,158,11,0.08), transparent);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-badge {
+      background: var(--brand);
+      color: #111827;
+      font-weight: 800;
+      padding: 8px 12px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(245,158,11,0.25);
+      letter-spacing: 0.5px;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 20px 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(96,165,250,0.08), rgba(34,197,94,0.08));
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      color: #0b1220;
+      background: var(--accent2);
+      padding: 4px 8px;
+      border-radius: 999px;
+      margin-left: 8px;
+      font-weight: 700;
+    }
+    .tag.diesel { background: var(--accent); }
+    .tag.petrol { background: var(--accent2); }
+
+    .section {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #334155;
+    }
+    .section h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    input[type="number"]:focus {
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(96,165,250,0.15);
+    }
+
+    .out {
+      background: #0b1220;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    .out .label {
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .out .value {
+      font-weight: 800;
+      color: #e2e8f0;
+    }
+
+    .muted {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer {
+      margin-top: 16px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #0b1220;
+      border: 1px solid #334155;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .warn {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .brandline {
+      margin-top: 24px;
+      padding: 12px;
+      border: 1px dashed #334155;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(245,158,11,0.08), transparent);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-badge">ABANG MIE</div>
+      <div>
+        <div class="title">CASH CARD Fuel Calculator</div>
+        <div class="subtitle">Kiraan telus: liter ikut harga subsidi, EDC ikut harga semasa. Diesel & Petrol.</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid">
+      <!-- DIESEL CARD -->
+      <section class="card" id="dieselCard">
+        <h2>DIESEL <span class="tag diesel">CASH CARD</span></h2>
+
+        <div class="section">
+          <h3>Input</h3>
+          <div class="row">
+            <div>
+              <label>Jumlah pelanggan (RM)</label>
+              <input type="number" step="0.01" id="dieselAmount" value="100" />
+            </div>
+            <div>
+              <label>Harga subsidi per liter (RM)</label>
+              <input type="number" step="0.001" id="dieselSubsidy" value="2.15" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Harga diesel semasa (RM)</label>
+              <input type="number" step="0.001" id="dieselCurrent" value="2.89" />
+            </div>
+            <div>
+              <label>Pembulatan liter (2 tempat perpuluhan)</label>
+              <input type="number" step="0.01" id="dieselLiterRound" value="2" />
+              <div class="note">Nilai ini hanya untuk paparan—kiraan EDC tetap guna liter tepat.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Output</h3>
+          <div class="row">
+            <div class="out">
+              <div class="label">Liter yang dapat (tepat)</div>
+              <div class="value" id="dieselLitersExact">—</div>
+            </div>
+            <div class="out">
+              <div class="label">Tekan liter (dibulatkan)</div>
+              <div class="value" id="dieselLitersRounded">—</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="out">
+              <div class="label">Amaun EDC (RM, sen tepat)</div>
+              <div class="value" id="dieselEDC">—</div>
+            </div>
+            <div class="out">
+              <div class="label">Perbezaan paparan (liter bulat vs tepat)</div>
+              <div class="value" id="dieselDiff">—</div>
+            </div>
+          </div>
+          <div class="footer">
+            <span class="pill">POS: Harga semasa</span>
+            <span class="muted">EDC dikira: (Jumlah ÷ Harga subsidi) × Harga semasa</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PETROL CARD -->
+      <section class="card" id="petrolCard">
+        <h2>PETROL <span class="tag petrol">CASH CARD</span></h2>
+
+        <div class="section">
+          <h3>Input</h3>
+          <div class="row">
+            <div>
+              <label>Jumlah pelanggan (RM)</label>
+              <input type="number" step="0.01" id="petrolAmount" value="100" />
+            </div>
+            <div>
+              <label>Harga subsidi per liter (RM)</label>
+              <input type="number" step="0.001" id="petrolSubsidy" value="2.05" />
+              <div class="note">Fail asal tunjuk 2.0499999999999998 — di sini dipaparkan sebagai 2.05.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Harga petrol semasa (RM)</label>
+              <input type="number" step="0.001" id="petrolCurrent" value="2.54" />
+            </div>
+            <div>
+              <label>Pembulatan liter (2 tempat perpuluhan)</label>
+              <input type="number" step="0.01" id="petrolLiterRound" value="2" />
+              <div class="note">Nilai ini hanya untuk paparan—kiraan EDC tetap guna liter tepat.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Output</h3>
+          <div class="row">
+            <div class="out">
+              <div class="label">Liter yang dapat (tepat)</div>
+              <div class="value" id="petrolLitersExact">—</div>
+            </div>
+            <div class="out">
+              <div class="label">Tekan liter (dibulatkan)</div>
+              <div class="value" id="petrolLitersRounded">—</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="out">
+              <div class="label">Amaun EDC (RM, sen tepat)</div>
+              <div class="value" id="petrolEDC">—</div>
+            </div>
+            <div class="out">
+              <div class="label">Perbezaan paparan (liter bulat vs tepat)</div>
+              <div class="value" id="petrolDiff">—</div>
+            </div>
+          </div>
+          <div class="footer">
+            <span class="pill">POS: Harga semasa</span>
+            <span class="muted">EDC dikira: (Jumlah ÷ Harga subsidi) × Harga semasa</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="brandline">
+      Created by Abang Mie BHP -Auto update dari data.gov.my. Juka tiada auto update boleh manual keyin.
+    </div>
+  </main>
+
+  <script>
+    // Utility: format to 2 decimal places for liters, 2 for RM (sen)
+    const fmt2 = (n) => (isFinite(n) ? n.toFixed(2) : "—");
+    const fmtRM = (n) => (isFinite(n) ? n.toFixed(2) : "—");
+
+    function compute(amount, subsidyPrice, currentPrice, literRoundPlaces = 2) {
+      const amt = Number(amount);
+      const sub = Number(subsidyPrice);
+      const cur = Number(currentPrice);
+      const places = Math.max(0, Math.min(6, Number(literRoundPlaces) || 2)); // clamp 0–6
+
+      if (!(isFinite(amt) && isFinite(sub) && isFinite(cur)) || sub <= 0 || cur <= 0 || amt < 0) {
+        return {
+          litersExact: NaN,
+          litersRounded: NaN,
+          edc: NaN,
+          diffLiters: NaN
+        };
+      }
+
+      // Core logic:
+      // litersExact = amount / subsidyPrice
+      // edc = litersExact * currentPrice (rounded to sen)
+      const litersExact = amt / sub;
+      const litersRounded = Number(litersExact.toFixed(places));
+      const edcRaw = litersExact * cur;
+      const edc = Math.round(edcRaw * 100) / 100; // sen tepat
+
+      const diffLiters = litersRounded - litersExact;
+
+      return { litersExact, litersRounded, edc, diffLiters };
+    }
+
+    function bindCard(prefix) {
+      const amountEl = document.getElementById(prefix + "Amount");
+      const subsidyEl = document.getElementById(prefix + "Subsidy");
+      const currentEl = document.getElementById(prefix + "Current");
+      const roundEl = document.getElementById(prefix + "LiterRound");
+
+      const outExact = document.getElementById(prefix + "LitersExact");
+      const outRounded = document.getElementById(prefix + "LitersRounded");
+      const outEDC = document.getElementById(prefix + "EDC");
+      const outDiff = document.getElementById(prefix + "Diff");
+
+      const update = () => {
+        const { litersExact, litersRounded, edc, diffLiters } = compute(
+          amountEl.value,
+          subsidyEl.value,
+          currentEl.value,
+          roundEl.value
+        );
+
+        outExact.textContent = fmt2(litersExact);
+        outRounded.textContent = fmt2(litersRounded);
+        outEDC.textContent = fmtRM(edc);
+        outDiff.textContent = isFinite(diffLiters)
+          ? (diffLiters >= 0 ? "+" : "") + diffLiters.toFixed(6) + " L"
+          : "—";
+      };
+
+      amountEl.addEventListener("input", update);
+      subsidyEl.addEventListener("input", update);
+      currentEl.addEventListener("input", update);
+      roundEl.addEventListener("input", update);
+
+      update(); // initial
+    }
+
+    // Bind both cards
+    bindCard("diesel");
+    bindCard("petrol");
+  </script>
+</body>
+</html>
