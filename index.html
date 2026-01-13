@@ -11,8 +11,8 @@
     <div class="brand">
       <div class="brand-badge">CASH CARD</div>
       <div>
-        <div class="title">By Abang Mie BHP</div>
-        <div class="subtitle">Harga rasmi kerajaan — auto update mingguan (update manual jika perlu)</div>
+        <div class="title">CASH CARD Fuel Calculator</div>
+        <div class="subtitle">Harga rasmi kerajaan — auto update mingguan (fallback manual jika perlu)</div>
       </div>
     </div>
   </header>
@@ -44,6 +44,10 @@
             <div class="out"><div class="label">Beza liter</div><div class="value" id="dieselDiff">—</div></div>
           </div>
         </div>
+        <div class="section">
+          <button class="btn kira" onclick="updateCard('diesel')">Kira</button>
+          <button class="btn reset" onclick="resetCard('diesel')">Reset</button>
+        </div>
       </section>
 
       <!-- PETROL -->
@@ -70,6 +74,10 @@
             <div class="out"><div class="label">Amaun EDC (RM)</div><div class="value" id="petrolEDC">—</div></div>
             <div class="out"><div class="label">Beza liter</div><div class="value" id="petrolDiff">—</div></div>
           </div>
+        </div>
+        <div class="section">
+          <button class="btn kira" onclick="updateCard('petrol')">Kira</button>
+          <button class="btn reset" onclick="resetCard('petrol')">Reset</button>
         </div>
       </section>
     </div>
