@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CASH CARD — By Abang Mie</title>
+  <title>CASH CARD Fuel Calculator — By Abang Mie</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <div class="brand">
-      <div class="brand-badge">CASH CARD</div>
+      <div class="brand-badge">CASH CARD BHP</div>
       <div>
-        <div class="title">CASH CARD CALCULATOR</div>
+        <div class="title">CASH CARD</div>
         <div class="subtitle">Harga rasmi kerajaan — auto update mingguan (fallback manual jika perlu)</div>
       </div>
     </div>
@@ -21,62 +21,56 @@
     <div class="grid">
       <!-- DIESEL -->
       <section class="card" id="dieselCard">
-        <h2>DIESEL <span class="tag diesel">CASH CARD</span></h2>
+        <h2>DIESEL</h2>
         <div class="section">
           <h3>Input</h3>
           <div class="row">
-            <div><label>Jumlah pelanggan (RM)</label><input type="number" step="0.01" id="dieselAmount" value="100" /></div>
+            <div><label>Jumlah pelanggan (RM)</label><input type="number" step="0.01" id="dieselAmount" /></div>
             <div><label>Harga subsidi per liter (RM)</label><input type="number" step="0.001" id="dieselSubsidy" value="2.15" /></div>
           </div>
           <div class="row">
             <div><label>Harga diesel semasa (RM)</label><input type="number" step="0.001" id="dieselCurrent" value="2.89" /></div>
-            <div><label>Pembulatan liter</label><input type="number" step="1" id="dieselLiterRound" value="2" /></div>
           </div>
         </div>
         <div class="section">
           <h3>Output</h3>
           <div class="row">
             <div class="out"><div class="label">Liter tepat</div><div class="value" id="dieselLitersExact">—</div></div>
-            <div class="out"><div class="label">Liter bulat</div><div class="value" id="dieselLitersRounded">—</div></div>
+            <div class="out"><div class="label">Amaun EDC (RM)</div><div class="value" id="dieselEDC">—</div></div>
           </div>
           <div class="row">
-            <div class="out"><div class="label">Amaun EDC (RM)</div><div class="value" id="dieselEDC">—</div></div>
             <div class="out"><div class="label">Beza liter</div><div class="value" id="dieselDiff">—</div></div>
           </div>
         </div>
-        <div class="section">
-          <button class="btn kira" onclick="updateCard('diesel')">Kira</button>
+        <div class="section center-btn">
           <button class="btn reset" onclick="resetCard('diesel')">Reset</button>
         </div>
       </section>
 
       <!-- PETROL -->
       <section class="card" id="petrolCard">
-        <h2>PETROL <span class="tag petrol">CASH CARD</span></h2>
+        <h2>PETROL</h2>
         <div class="section">
           <h3>Input</h3>
           <div class="row">
-            <div><label>Jumlah pelanggan (RM)</label><input type="number" step="0.01" id="petrolAmount" value="100" /></div>
+            <div><label>Jumlah pelanggan (RM)</label><input type="number" step="0.01" id="petrolAmount" /></div>
             <div><label>Harga subsidi per liter (RM)</label><input type="number" step="0.001" id="petrolSubsidy" value="2.05" /></div>
           </div>
           <div class="row">
             <div><label>Harga petrol semasa (RM)</label><input type="number" step="0.001" id="petrolCurrent" value="2.54" /></div>
-            <div><label>Pembulatan liter</label><input type="number" step="1" id="petrolLiterRound" value="2" /></div>
           </div>
         </div>
         <div class="section">
           <h3>Output</h3>
           <div class="row">
             <div class="out"><div class="label">Liter tepat</div><div class="value" id="petrolLitersExact">—</div></div>
-            <div class="out"><div class="label">Liter bulat</div><div class="value" id="petrolLitersRounded">—</div></div>
+            <div class="out"><div class="label">Amaun EDC (RM)</div><div class="value" id="petrolEDC">—</div></div>
           </div>
           <div class="row">
-            <div class="out"><div class="label">Amaun EDC (RM)</div><div class="value" id="petrolEDC">—</div></div>
             <div class="out"><div class="label">Beza liter</div><div class="value" id="petrolDiff">—</div></div>
           </div>
         </div>
-        <div class="section">
-          <button class="btn kira" onclick="updateCard('petrol')">Kira</button>
+        <div class="section center-btn">
           <button class="btn reset" onclick="resetCard('petrol')">Reset</button>
         </div>
       </section>
