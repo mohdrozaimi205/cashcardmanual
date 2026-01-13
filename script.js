@@ -11,13 +11,13 @@ function compute(amount, subsidyPrice, currentPrice, literRoundPlaces = 2) {
   }
   const litersExact = amt / sub;
   const litersRounded = Number(litersExact.toFixed(places));
-  const edc = Math.round(litersExact * cur * 100) / 100; // sen tepat
+  const edc = Math.round(litersExact * cur * 100) / 100;
   const diffLiters = litersRounded - litersExact;
   return { litersExact, litersRounded, edc, diffLiters };
 }
 
-// Bind a card by prefix (diesel/petrol)
-function bindCard(prefix) {
+// Update card calculation
+function updateCard(prefix) {
   const amountEl = document.getElementById(prefix + "Amount");
   const subsidyEl = document.getElementById(prefix + "Subsidy");
   const currentEl = document.getElementById(prefix + "Current");
@@ -28,31 +28,28 @@ function bindCard(prefix) {
   const outEDC = document.getElementById(prefix + "EDC");
   const outDiff = document.getElementById(prefix + "Diff");
 
-  const update = () => {
-    const { litersExact, litersRounded, edc, diffLiters } = compute(
-      amountEl.value, subsidyEl.value, currentEl.value, roundEl.value
-    );
-    outExact.textContent = fmt2(litersExact);
-    outRounded.textContent = fmt2(litersRounded);
-    outEDC.textContent = fmtRM(edc);
-    outDiff.textContent = isFinite(diffLiters)
-      ? (diffLiters >= 0 ? "+" : "") + diffLiters.toFixed(6) + " L"
-      : "—";
-  };
+  const { litersExact, litersRounded, edc, diffLiters } = compute(
+    amountEl.value, subsidyEl.value, currentEl.value, roundEl.value
+  );
 
-  amountEl.addEventListener("input", update);
-  subsidyEl.addEventListener("input", update);
-  currentEl.addEventListener("input", update);
-  roundEl.addEventListener("input", update);
-
-  update(); // initial render
+  outExact.textContent = fmt2(litersExact);
+  outRounded.textContent = fmt2(litersRounded);
+  outEDC.textContent = fmtRM(edc);
+  outDiff.textContent = isFinite(diffLiters)
+    ? (diffLiters >= 0 ? "+" : "") + diffLiters.toFixed(6) + " L"
+    : "—";
 }
 
-// Auto-fetch latest official prices (top row) with manual fallback
+// Reset hanya Jumlah pelanggan
+function resetCard(prefix) {
+  document.getElementById(prefix + "Amount").value = 100;
+  updateCard(prefix);
+}
+
+// Auto-fetch harga rasmi
 async function updateFuelPrices() {
   const infoEl = document.getElementById("officialInfo");
   try {
-    // API endpoint: top row (latest)
     const url = "https://api.data.gov.my/data-catalogue/fuelprice?limit=1";
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -60,31 +57,26 @@ async function updateFuelPrices() {
     const latest = Array.isArray(data) ? data[0] : null;
     if (!latest) throw new Error("Tiada data");
 
-    // Fill current prices
     const dieselCur = Number(latest.diesel);
     const petrolCur = Number(latest.ron95);
 
     if (isFinite(dieselCur)) document.getElementById("dieselCurrent").value = dieselCur;
     if (isFinite(petrolCur)) document.getElementById("petrolCurrent").value = petrolCur;
 
-    // Info banner
     infoEl.textContent =
       `Harga rasmi (${latest.date}): RON95 RM${latest.ron95}, RON97 RM${latest.ron97}, `
       + `Diesel Semenanjung RM${latest.diesel}, Diesel Sabah/Sarawak RM${latest.diesel_eastmsia}, `
       + `RON95 BUDI95 RM${latest.ron95_budi95}, RON95 SKPS RM${latest.ron95_skps}. Sumber: data.gov.my`;
 
   } catch (err) {
-    // Fallback: keep manual inputs; show message
-    infoEl.textContent =
-      "Gagal ambil data rasmi. Sila masukkan harga semasa secara manual dalam input di atas.";
+    infoEl.textContent = "Gagal ambil data rasmi. Sila masukkan harga semasa secara manual.";
   } finally {
-    // Recompute after any update
-    bindCard("diesel");
-    bindCard("petrol");
+    updateCard("diesel");
+    updateCard("petrol");
   }
 }
 
-// Initial bind and fetch
-bindCard("diesel");
-bindCard("petrol");
+// Initial
+updateCard("diesel");
+updateCard("petrol");
 updateFuelPrices();
