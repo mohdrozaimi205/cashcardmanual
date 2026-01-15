@@ -45,3 +45,16 @@ input[type="number"] {width:100%; padding:5px 6px; border-radius:6px; border:1px
   input[type="number"] {font-size:14px;}
   .btn.reset {width:100%;}
 }
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #f2f2f2;
+  font-size: 0.9em;
+  color: #333;
+  margin-top: 20px;
+}
+
+.footer-text {
+  font-style: italic;
+}
